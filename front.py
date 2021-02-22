@@ -81,13 +81,15 @@ app.layout = html.Div(children=[
     [dash.dependencies.Input('dropdown', 'value')])
 def update_output(value):
     excel_df = pd.read_csv(value)
+    q_name = value.split('_')[-1][:-4]
+    metrics = pd.read_csv('./data/metrics.csv', index_col=0)
     height_window = len(excel_df) * 15
 
     df = add_employers(excel_df)
 
     fig = ff.create_gantt(
         df,
-        title="График отпусков",
+        title=f"График отпусков, метрика: {metrics.loc[q_name, '0']}",
         colors='Viridis', index_col='Complete', showgrid_x=True,
         height=height_window)
     fig.layout.xaxis.rangeselector = None
